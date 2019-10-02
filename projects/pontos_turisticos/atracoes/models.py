@@ -3,7 +3,7 @@ from django.db import models
 # Create your models here.
 
 
-class atracoes(models.Model):
+class Atracoes(models.Model):
     name = models.CharField(max_length=150)
     description = models.TextField()
     horario_func = models.TextField()

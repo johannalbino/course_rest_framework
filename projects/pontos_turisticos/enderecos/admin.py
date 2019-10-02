@@ -1,6 +1,6 @@
 from django.contrib import admin
-from .models import Atracoes
+from .models import Endereco
 
 # Register your models here.
 
-admin.site.register(Atracoes)
+admin.site.register(Endereco)
