@@ -12,5 +12,9 @@ class Endereco(models.Model):
     latitude = models.IntegerField(null=True, blank=True)
     longitude = models.IntegerField(null=True, blank=True)
 
+    class Meta:
+        managed = True
+        db_table = 'enderecos'
+
     def __str__(self):
         return self.linha1

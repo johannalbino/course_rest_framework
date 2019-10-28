@@ -9,6 +9,10 @@ class Avaliacoes(models.Model):
     nota = models.DecimalField(max_digits=3, decimal_places=2)
     data = models.DateTimeField(auto_now_add=True)
 
+    class Meta:
+        managed = True
+        db_table = 'avaliacoes'
+
     def __str__(self):
         return self.user.username
 

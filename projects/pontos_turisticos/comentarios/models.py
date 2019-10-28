@@ -9,5 +9,9 @@ class Comentarios(models.Model):
     data = models.DateTimeField(auto_now_add=True)
     aprovado = models.BooleanField(default=True)
 
+    class Meta:
+        managed = True
+        db_table = 'comentarios'
+
     def __str__(self):
         return self.comentario

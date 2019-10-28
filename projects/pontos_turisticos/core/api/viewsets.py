@@ -1,51 +1,57 @@
+from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets, status
+from rest_framework.authentication import TokenAuthentication
 from rest_framework.decorators import action
 from rest_framework.filters import SearchFilter
+from django_filters import rest_framework as filters
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from core.models import PontoTuristicos
 from .serializers import PontoTuristicosSerializer
+from core.models import TypeTest
+
+
+class PontoTuristicosFilter(filters.FilterSet):
+    id = filters.CharFilter(lookup_expr='exact')
+    name = filters.CharFilter(lookup_expr='icontains')
+    description = filters.CharFilter(lookup_expr='icontains')
+    type1 = filters.ModelChoiceFilter(queryset=TypeTest.objects.all())
+    endereco = filters.CharFilter(lookup_expr='icontains', field_name='endereco__linha1')
+
+    class Meta:
+        model = PontoTuristicos
+        fields = ('id', 'name', 'description', 'type1', 'endereco')
 
 
 class PontoTuristicoViewSet(viewsets.ModelViewSet):
     """
     A simple ViewSet for viewing and editing.
     """
-    queryset = PontoTuristicos.objects.all()
+
     serializer_class = PontoTuristicosSerializer
-    filter_backends = [SearchFilter]
-    filter_fields = ['id', 'name', 'description', 'endereco__linha1']
+    filterset_class = PontoTuristicosFilter
+    #permission_classes = [IsAuthenticated]
+    #authentication_classes = [TokenAuthentication, ]
+
+    #lookup_field = 'name'  Tomar cuidado ao utilizar esse metodo
 
     def get_queryset(self):
-        id = self.request.query_params.get('id', None)
-        name = self.request.query_params.get('name', None)
-        description = self.request.query_params.get('description', None)
         queryset = PontoTuristicos.objects.all()
-
-        if id:
-            queryset = PontoTuristicos.objects.filter(pk=id)
-
-        elif name:
-            queryset = queryset.objects.filter(name=name)
-
-        elif description:
-            queryset = queryset.objects.filter(description=description)
 
         return queryset
 
-    """
     def list(self, request, *args, **kwargs):
-        
+        """
         Função para listar da forma que eu preciso quando for realizado um get no endpoint
         :param request:
         :param args:
         :param kwargs:
         :return:
-    
-        queryset = PontoTuristicos.objects.all()
-        serializer = PontoTuristicosSerializer(queryset, many=True)
-        return Response(serializer.data)
-        
-    """
+        """
+        #queryset = PontoTuristicos.objects.all()
+        #serializer = PontoTuristicosSerializer(queryset, many=True)
+        #return Response(serializer.data)
+        return super(PontoTuristicoViewSet, self).list(request, *args, **kwargs)
 
     def create(self, request, *args, **kwargs):
         """
@@ -72,7 +78,7 @@ class PontoTuristicoViewSet(viewsets.ModelViewSet):
         :param kwargs:
         :return:
         """
-        pass
+        return super(PontoTuristicoViewSet, self).destroy(request, *args, **kwargs)
 
     def retrieve(self, request, *args, **kwargs):
         """
@@ -82,7 +88,7 @@ class PontoTuristicoViewSet(viewsets.ModelViewSet):
         :param kwargs:
         :return:
         """
-        pass
+        return super(PontoTuristicoViewSet, self).retrieve(request, *args, **kwargs)
 
     def update(self, request, *args, **kwargs):
         """
@@ -92,7 +98,7 @@ class PontoTuristicoViewSet(viewsets.ModelViewSet):
         :param kwargs:
         :return:
         """
-        pass
+        return super(PontoTuristicoViewSet, self).update(request, *args, **kwargs)
 
     def partial_update(self, request, *args, **kwargs):
         """
@@ -102,7 +108,7 @@ class PontoTuristicoViewSet(viewsets.ModelViewSet):
         :param kwargs:
         :return:
         """
-        pass
+        return super(PontoTuristicoViewSet, self).partial_update(request, *args, **kwargs)
 
     @action(methods=['get'], detail=True)
     def denunciar(self, request, pk=None):
